@@ -1,5 +1,12 @@
 # rustycogs (dev)
 
+* Windows: fixed R crashing on exit (`0xC0000409`) after any http(s) or
+  cloud read. rustls' crypto, aws-lc, is now built at the Windows 10 API
+  level (`_WIN32_WINNT=0x0A00`, in `src/Makevars.win`); at Rtools' default
+  (Windows 7) its exit-time cleanup calls `BCryptGenRandom`, which fails
+  inside `ExitProcess`, and aws-lc aborts. See
+  <https://github.com/mdsumner/windows-rust-tls-exit>.
+
 * Fixed reading http(s) TIFF URLs that carry a query string (e.g. signed
   download endpoints that redirect to a temporary S3 URL). These previously
   failed because `object_store`'s `HttpStore` discards the query string (and
